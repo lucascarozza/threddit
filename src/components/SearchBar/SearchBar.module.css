@@ -1,0 +1,39 @@
+.searchForm {
+    display: inline-flex;
+    height: 2.7rem;
+    width: 30rem;
+    overflow: hidden;
+    border-radius: 1.5rem;
+    background-color: white;
+    border: 1px solid gray;
+}
+
+.searchInput,
+.searchButton {
+    background-color: transparent;
+    border: none;
+    outline: none;
+}
+
+.searchInput {
+    width: 86%;
+    padding-left: 1.5rem;
+    font-size: 1rem;
+}
+
+.searchButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 14%;
+    transition: all 200ms ease;   
+}
+
+.searchIcon {
+    font-size: 1.2rem;
+}
+
+.searchButton:hover {
+    cursor: pointer;
+    background-color: orange;
+}
