@@ -14,12 +14,14 @@
     box-shadow: 0 0 0.5rem 0.1rem rgba(0, 0, 0, 0.3);
 }
 
-.logoContainer {
+.headerLeft,
+.headerRight {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 1rem;
 }
+
 .logo {
     font-family: var(--font-family);
     font-size: 2.5rem;
@@ -27,4 +29,8 @@
 
 .icon {
     font-size: 3rem;
+}
+
+.themeIcon {
+    font-size: 2rem;
 }

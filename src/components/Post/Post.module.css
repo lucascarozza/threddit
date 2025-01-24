@@ -28,10 +28,17 @@
     padding: 0.5rem 1rem;
 }
 
-.postText {
+.postTitle {
     font-size: 1.5rem;
     font-weight: 700;
 }
+
+.postText {
+    line-height: 1.5;
+    font-size: 1rem;
+    padding-top: 1rem;
+}
+
 .mediaArea {
     display: inline-flex;
     overflow-y: hidden;
@@ -46,4 +53,33 @@
     border-radius: 0.5rem;
     height: 13rem;
     width: auto;
+    transition: all 200ms ease;
+}
+
+.media:hover {
+    transform: scale(1.02);
+    cursor: pointer;
+}
+
+.linkArea {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 1rem;
+}
+
+.link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: var(--link-bg-color);
+    border-radius: 1.5rem;
+    padding: 0.5rem 1rem;
+    color: black;
+    transition: all 200ms ease;
+}
+
+.link:hover {
+    transform: scale(1.02);
 }
