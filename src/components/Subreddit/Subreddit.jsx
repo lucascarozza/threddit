@@ -3,7 +3,7 @@ import styles from "./Subreddit.module.css";
 
 const subreddit = {
   name: "r/EvilCats",
-  img: "./public/evil-smile.jpg",
+  img: "/evil-smile.jpg",
 }
 
 const Subreddit = () => {
