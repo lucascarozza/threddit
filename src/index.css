@@ -1,5 +1,8 @@
 :root {
     --font-family: "Dosis", arial, sans-serif;
+    --font-family-body: arial, sans-serif;
+    --background-color: #ffffff;
+    --subreddit-hover-bg-color: #d7d7d7;
 }
 
 body {
