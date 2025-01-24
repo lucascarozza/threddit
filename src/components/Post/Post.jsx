@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { FaLink } from "react-icons/fa";
 import styles from "./Post.module.css";
 
@@ -13,12 +14,45 @@ const subreddit = {
 };
 
 const Post = () => {
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [fullscreenSrc, setFullscreenSrc] = useState("");
+
   const hasMedia = true;
   const hasText = true;
   const hasLink = true;
 
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        setIsFullscreen(false);
+      }
+    };
+
+    if (isFullscreen) {
+      document.addEventListener("keydown", handleKeyDown);
+    }
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isFullscreen]);
+
+  const openFullscreen = (src) => {
+    setFullscreenSrc(src);
+    setIsFullscreen(true);
+  };
+
+  const closeFullscreen = () => {
+    setIsFullscreen(false);
+  };
+
   return (
     <div className={styles.card}>
+      {isFullscreen && (
+        <div className={styles.fullscreen} onClick={closeFullscreen}>
+          <img src={fullscreenSrc} />
+        </div>
+      )}
       <div className={styles.subredditInfo}>
         <img src={subreddit.img} className={styles.subredditImg} />
         <p className={styles.subredditName}>r/EvilCats • {subreddit.time}</p>
@@ -41,19 +75,25 @@ const Post = () => {
       {hasMedia ? (
         <div className={styles.mediaArea}>
           <figure>
-            <img src={subreddit.media} className={styles.media} />
+            <img
+              src={subreddit.media}
+              className={styles.media}
+              onClick={() => openFullscreen(subreddit.media)}
+            />
           </figure>
           <figure>
-            <img src={subreddit.media} className={styles.media} />
+            <img
+              src={subreddit.media}
+              className={styles.media}
+              onClick={() => openFullscreen(subreddit.media)}
+            />
           </figure>
           <figure>
-            <img src={subreddit.media} className={styles.media} />
-          </figure>
-          <figure>
-            <img src={subreddit.media} className={styles.media} />
-          </figure>
-          <figure>
-            <img src={subreddit.media} className={styles.media} />
+            <img
+              src={subreddit.media}
+              className={styles.media}
+              onClick={() => openFullscreen(subreddit.media)}
+            />
           </figure>
         </div>
       ) : (
