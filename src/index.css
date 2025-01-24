@@ -1,3 +1,7 @@
 :root {
     --font-family: "Dosis", arial, sans-serif;
 }
+
+body {
+    overflow-x: hidden;
+}

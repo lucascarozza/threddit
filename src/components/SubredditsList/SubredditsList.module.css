@@ -1,0 +1,16 @@
+.subredditsList {
+    position: fixed;
+    right: 20rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    height: 30rem;
+    width: 16rem;
+}
+
+.listTitle {
+    font-family: var(--font-family);
+    font-size: 2rem;
+    padding-bottom: 1rem;
+    padding-left: 0.6rem;
+}

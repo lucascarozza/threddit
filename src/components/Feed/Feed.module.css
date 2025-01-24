@@ -1,0 +1,9 @@
+.container {
+    position: relative;
+    right: 11rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 40rem;
+    gap: 1rem;
+}

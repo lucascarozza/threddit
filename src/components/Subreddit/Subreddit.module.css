@@ -1,0 +1,22 @@
+.subreddits {
+    display: inline-flex;
+    align-items: center;
+
+    border: 2px solid red;
+    border-radius: 2rem;
+
+    width: 100%;
+
+    padding: 0.5rem;
+    gap: 0.5rem;
+
+    font-size: 2rem;
+
+    transition: all 200ms ease;
+}
+
+.subreddits:hover {
+    background-color: #f2f2f2;
+    transform: scale(1.05);
+    cursor: pointer;
+}

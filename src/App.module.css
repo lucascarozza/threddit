@@ -1,3 +1,16 @@
 h1 {
   font-size: 2rem;
 }
+
+.content {
+  position: relative;
+  top: 5rem;
+
+  width: 100%;
+
+  display: inline-flex;
+  justify-content: center;
+
+  padding-top: 3rem;
+  gap: 1rem;
+}
