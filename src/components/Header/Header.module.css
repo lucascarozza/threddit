@@ -12,6 +12,8 @@
 
     background-color: var(--background-color);
     box-shadow: 0 0 0.5rem 0.1rem rgba(0, 0, 0, 0.3);
+
+    cursor: default;
 }
 
 .headerLeft,

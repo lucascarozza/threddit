@@ -53,7 +53,7 @@
     border-radius: 0.5rem;
     height: 13rem;
     width: auto;
-    transition: all 200ms ease;
+    transition: var(--default-transition);
 }
 
 .media:hover {
@@ -98,7 +98,7 @@
     border-radius: 1.5rem;
     padding: 0.5rem 1rem;
     color: black;
-    transition: all 200ms ease;
+    transition: var(--default-transition);
 }
 
 .link:hover {

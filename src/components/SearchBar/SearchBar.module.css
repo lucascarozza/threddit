@@ -4,7 +4,7 @@
     width: 30rem;
     overflow: hidden;
     border-radius: 1.5rem;
-    background-color: white;
+    background-color: var(--background-color);
     border: 1px solid gray;
 }
 
@@ -21,19 +21,22 @@
     font-size: 1rem;
 }
 
+.searchIcon {
+    font-size: 1.2rem;
+    transition: var(--default-transition);
+}
+.searchIcon:hover {
+    font-size: 1.5rem;
+}
+
 .searchButton {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 14%;
-    transition: all 200ms ease;   
-}
-
-.searchIcon {
-    font-size: 1.2rem;
+    transition: var(--default-transition);   
 }
 
 .searchButton:hover {
     cursor: pointer;
-    background-color: orange;
 }
