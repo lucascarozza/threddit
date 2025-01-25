@@ -6,20 +6,22 @@ const subreddit = {
   name: "r/EvilCats",
   time: "30 min ago",
   img: "/evil-smile.jpg",
-  postTitle: "Evil cat smiling",
+  postTitle: "Evil orange car on Zoom call",
   postText:
-    "Whiskers McSneaky's Evil Cat Smile has the whole neighborhood on edge—who knows what mischievous plot he's cooking up this time? That gleam in his eye and that up-to-no-good grin can only mean one thing: Whiskers is back at it again! #EvilCatSmile #MischiefMonday #CatPranks 😼",
+    "My car just made an appearance on my Zoom call, looking like it's plotting world domination. Never seen an orange car look so mischievous with those back ears! 😂 #ZoomBomb #EvilFace",
   link: "https://en.wikipedia.org/wiki/Cat",
-  media: "/evil-smile.jpg",
+  media: [
+    "/silly-orange.jpg",
+    "/evil-smile2.gif",
+    "/silly-cat2.jpg",
+    "silly-cat3.jpg",
+  ],
 };
 
 const Post = () => {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [fullscreenSrc, setFullscreenSrc] = useState("");
-
-  const hasMedia = true;
-  const hasText = true;
-  const hasLink = true;
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -30,6 +32,8 @@ const Post = () => {
 
     if (isFullscreen) {
       document.addEventListener("keydown", handleKeyDown);
+    } else {
+      document.removeEventListener("keydown", handleKeyDown);
     }
 
     return () => {
@@ -37,8 +41,9 @@ const Post = () => {
     };
   }, [isFullscreen]);
 
-  const openFullscreen = (src) => {
-    setFullscreenSrc(src);
+  const openFullscreen = (index) => {
+    setCurrentIndex(index);
+    setFullscreenSrc(subreddit.media[index]);
     setIsFullscreen(true);
   };
 
@@ -46,11 +51,49 @@ const Post = () => {
     setIsFullscreen(false);
   };
 
+  const nextImage = (event) => {
+    event.stopPropagation();
+    const newIndex = (currentIndex + 1) % subreddit.media.length;
+    setCurrentIndex(newIndex);
+    setFullscreenSrc(subreddit.media[newIndex]);
+  };
+
+  const prevImage = (event) => {
+    event.stopPropagation();
+    const newIndex =
+      (currentIndex - 1 + subreddit.media.length) % subreddit.media.length;
+    setCurrentIndex(newIndex);
+    setFullscreenSrc(subreddit.media[newIndex]);
+  };
+
   return (
     <div className={styles.card}>
       {isFullscreen && (
         <div className={styles.fullscreen} onClick={closeFullscreen}>
-          <img src={fullscreenSrc} />
+          <img
+            src={fullscreenSrc}
+            alt="Full screen view"
+            onClick={(e) => e.stopPropagation()}
+          />
+          <button className={styles.closeBtn} onClick={closeFullscreen}>
+            ×
+          </button>
+          {subreddit.media.length > 1 && (
+            <>
+              <button
+                className={`${styles.navArrow} ${styles.leftArrow}`}
+                onClick={prevImage}
+              >
+                ‹
+              </button>
+              <button
+                className={`${styles.navArrow} ${styles.rightArrow}`}
+                onClick={nextImage}
+              >
+                ›
+              </button>
+            </>
+          )}
         </div>
       )}
       <div className={styles.subredditInfo}>
@@ -59,46 +102,26 @@ const Post = () => {
       </div>
       <div className={styles.textArea}>
         <p className={styles.postTitle}>{subreddit.postTitle}</p>
-        {hasText ? <p className={styles.postText}>{subreddit.postText}</p> : ""}
+        <p className={styles.postText}>{subreddit.postText}</p>
       </div>
 
-      {hasLink ? (
-        <div className={styles.linkArea}>
-          <a href={subreddit.link} target="_blank" className={styles.link}>
-            <FaLink /> {subreddit.link}
-          </a>
-        </div>
-      ) : (
-        ""
-      )}
+      <div className={styles.linkArea}>
+        <a href={subreddit.link} target="_blank" className={styles.link}>
+          <FaLink /> {subreddit.link}
+        </a>
+      </div>
 
-      {hasMedia ? (
-        <div className={styles.mediaArea}>
-          <figure>
+      <div className={styles.mediaArea}>
+        {subreddit.media.map((src, index) => (
+          <figure key={index}>
             <img
-              src={subreddit.media}
+              src={src}
               className={styles.media}
-              onClick={() => openFullscreen(subreddit.media)}
+              onClick={() => openFullscreen(index)}
             />
           </figure>
-          <figure>
-            <img
-              src={subreddit.media}
-              className={styles.media}
-              onClick={() => openFullscreen(subreddit.media)}
-            />
-          </figure>
-          <figure>
-            <img
-              src={subreddit.media}
-              className={styles.media}
-              onClick={() => openFullscreen(subreddit.media)}
-            />
-          </figure>
-        </div>
-      ) : (
-        ""
-      )}
+        ))}
+      </div>
     </div>
   );
 };
