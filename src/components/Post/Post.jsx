@@ -19,6 +19,10 @@ const subreddit = {
 };
 
 const Post = () => {
+  const hasLink = true;
+  const hasMedia = true;
+  const hasText = true;
+
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [fullscreenSrc, setFullscreenSrc] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -102,26 +106,34 @@ const Post = () => {
       </div>
       <div className={styles.textArea}>
         <p className={styles.postTitle}>{subreddit.postTitle}</p>
-        <p className={styles.postText}>{subreddit.postText}</p>
+        {hasText ? <p className={styles.postText}>{subreddit.postText}</p> : ""}
       </div>
 
-      <div className={styles.linkArea}>
-        <a href={subreddit.link} target="_blank" className={styles.link}>
-          <FaLink /> {subreddit.link}
-        </a>
-      </div>
+      {hasLink ? (
+        <div className={styles.linkArea}>
+          <a href={subreddit.link} target="_blank" className={styles.link}>
+            <FaLink /> {subreddit.link}
+          </a>
+        </div>
+      ) : (
+        ""
+      )}
 
-      <div className={styles.mediaArea}>
-        {subreddit.media.map((src, index) => (
-          <figure key={index}>
-            <img
-              src={src}
-              className={styles.media}
-              onClick={() => openFullscreen(index)}
-            />
-          </figure>
-        ))}
-      </div>
+      {hasMedia ? (
+        <div className={styles.mediaArea}>
+          {subreddit.media.map((src, index) => (
+            <figure key={index}>
+              <img
+                src={src}
+                className={styles.media}
+                onClick={() => openFullscreen(index)}
+              />
+            </figure>
+          ))}
+        </div>
+      ) : (
+        ""
+      )}
     </div>
   );
 };
