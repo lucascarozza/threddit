@@ -58,15 +58,27 @@ const Post = ({ post }) => {
     const now = new Date();
     const postDate = new Date(created * 1000);
     const diffInMinutes = Math.floor((now - postDate) / (1000 * 60));
-
+  
     if (diffInMinutes < 60) {
       return `${diffInMinutes} min ago`;
     } else if (diffInMinutes < 1440) {
-      return `${Math.floor(diffInMinutes / 60)} hours ago`;
+      const hours = Math.round(diffInMinutes / 60);
+      return hours === 1 ? `${hours} hour ago` : `${hours} hours ago`;
+    } else if (diffInMinutes < 10080) {
+      const days = Math.floor(diffInMinutes / 1440);
+      return days === 1 ? `${days} day ago` : `${days} days ago`;
+    } else if (diffInMinutes < 43200) {
+      const weeks = Math.floor(diffInMinutes / 10080);
+      return weeks === 1 ? `${weeks} week ago` : `${weeks} weeks ago`;
+    } else if (diffInMinutes < 525600) {
+      const months = Math.floor(diffInMinutes / 43200);
+      return months === 1 ? `${months} month ago` : `${months} months ago`;
     } else {
-      return `${Math.floor(diffInMinutes / 1440)} days ago`;
+      const years = Math.floor(diffInMinutes / 525600);
+      return years === 1 ? `${years} year ago` : `${years} years ago`;
     }
   };
+  
 
   function formatScore(score) {
     if (score >= 1000000) {
