@@ -68,6 +68,16 @@ const Post = ({ post }) => {
     }
   };
 
+  function formatScore(score) {
+    if (score >= 1000000) {
+      return (score / 1000000).toFixed(1) + 'm';
+    } else if (score >= 1000) {
+      return (score / 1000).toFixed(1) + 'k';
+    } else {
+      return score.toString();
+    }
+  }  
+
   const formatUrl = (url) => {
     return url.replace(/^https?:\/\//, "").replace(/\/$/, "");
   };
@@ -121,7 +131,7 @@ const Post = ({ post }) => {
         </div>
         <div className={styles.score}>
           <FaHeart />
-          <p>{post.score}</p>
+          <p>{formatScore(post.score)}</p>
         </div>
       </div>
 

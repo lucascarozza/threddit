@@ -14,19 +14,24 @@ const Feed = () => {
     dispatch(fetchFeed(currentSubreddit));
   }, [dispatch, currentSubreddit]);
 
-  if (status === "loading") {
-    return <div className={styles.statusMessage}>Loading...</div>;
-  }
-
-  if (status === "failed") {
-    return <div className={styles.statusMessage}>Error: {error}</div>;
-  }
-
   return (
     <section className={styles.container}>
-      {posts.map((post) => (
-        <Post key={post.id} post={post} />
-      ))}
+      {status === "loading" ? (
+        <div className={styles.status}>
+          <p className={styles.statusText}>
+            Hang tight! We're fetching posts for you... 🚀
+          </p>
+        </div>
+      ) : status === "failed" ? (
+        <div className={styles.status}>
+          <p className={styles.statusText}>
+            Oops! Something went wrong. 😔 Please try again later.
+          </p>
+          <p className={styles.statusError}>Error: {error}</p>
+        </div>
+      ) : (
+        posts.map((post) => <Post key={post.id} post={post} />)
+      )}
     </section>
   );
 };

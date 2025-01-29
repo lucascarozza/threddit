@@ -12,6 +12,7 @@
     --reddit-orangered: #FF4500;
     --default-transition: all 200ms ease;
     --secondary-font-color: gray;
+    --error-accent-color: rgb(255, 172, 172);
 }
 
 body {
