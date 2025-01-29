@@ -11,6 +11,7 @@
     --reddit-orange: #FF5700;
     --reddit-orangered: #FF4500;
     --default-transition: all 200ms ease;
+    --secondary-font-color: gray;
 }
 
 body {

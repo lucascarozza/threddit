@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { FaLink } from "react-icons/fa";
 import styles from "./Post.module.css";
+import { FaHeart } from "react-icons/fa6";
 
 const subreddit = {
   name: "r/EvilCats",
@@ -16,6 +17,7 @@ const subreddit = {
     "/silly-cat2.jpg",
     "silly-cat3.jpg",
   ],
+  score: 3000,
 };
 
 const Post = () => {
@@ -100,9 +102,16 @@ const Post = () => {
           )}
         </div>
       )}
-      <div className={styles.subredditInfo}>
-        <img src={subreddit.img} className={styles.subredditImg} />
-        <p className={styles.subredditName}>r/EvilCats • {subreddit.time}</p>
+
+      <div className={styles.cardHeader}>
+        <div className={styles.subredditInfo}>
+          <img src={subreddit.img} className={styles.subredditImg} />
+          <p className={styles.subredditName}>r/EvilCats • {subreddit.time}</p>
+        </div>
+        <div className={styles.score}>
+          <FaHeart />
+          <p>{subreddit.score}</p>
+        </div>
       </div>
       <div className={styles.textArea}>
         <p className={styles.postTitle}>{subreddit.postTitle}</p>
