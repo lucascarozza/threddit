@@ -59,6 +59,14 @@ const extractPostMedia = (post) => {
     return [{ type: "image", url: post.url }];
   }
 
+  if (post.is_gallery) {
+    return Object.values(post.media_metadata).map((media) => {
+      const ext = media.m.split("/")[1];
+      const url = `https://i.redd.it/${media.id}.${ext}`;
+      return { type: "image", url: url.replace("preview.", "") };
+    });
+  }
+
   return null;
 };
 

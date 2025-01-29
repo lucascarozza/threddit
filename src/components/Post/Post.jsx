@@ -1,32 +1,12 @@
 import { useState, useEffect } from "react";
-import { FaLink } from "react-icons/fa";
 import styles from "./Post.module.css";
 import { FaHeart } from "react-icons/fa6";
+import { FaLink } from "react-icons/fa";
 
-const subreddit = {
-  name: "r/EvilCats",
-  time: "30 min ago",
-  img: "/evil-smile.jpg",
-  postTitle: "Evil orange car on Zoom call",
-  postText:
-    "My car just made an appearance on my Zoom call, looking like it's plotting world domination. Never seen an orange car look so mischievous with those back ears! 😂 #ZoomBomb #EvilFace",
-  link: "https://en.wikipedia.org/wiki/Cat",
-  media: [
-    "/silly-orange.jpg",
-    "/evil-smile2.gif",
-    "/silly-cat2.jpg",
-    "silly-cat3.jpg",
-  ],
-  score: 3000,
-};
-
-const Post = () => {
-  const hasLink = true;
-  const hasMedia = true;
-  const hasText = true;
-
+const Post = ({ post }) => {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [fullscreenSrc, setFullscreenSrc] = useState("");
+  const [fullscreenType, setFullscreenType] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
@@ -49,7 +29,8 @@ const Post = () => {
 
   const openFullscreen = (index) => {
     setCurrentIndex(index);
-    setFullscreenSrc(subreddit.media[index]);
+    setFullscreenSrc(post.media[index].url);
+    setFullscreenType(post.media[index].type);
     setIsFullscreen(true);
   };
 
@@ -59,32 +40,60 @@ const Post = () => {
 
   const nextImage = (event) => {
     event.stopPropagation();
-    const newIndex = (currentIndex + 1) % subreddit.media.length;
+    const newIndex = (currentIndex + 1) % post.media.length;
     setCurrentIndex(newIndex);
-    setFullscreenSrc(subreddit.media[newIndex]);
+    setFullscreenSrc(post.media[newIndex].url);
+    setFullscreenType(post.media[newIndex].type);
   };
 
   const prevImage = (event) => {
     event.stopPropagation();
-    const newIndex =
-      (currentIndex - 1 + subreddit.media.length) % subreddit.media.length;
+    const newIndex = (currentIndex - 1 + post.media.length) % post.media.length;
     setCurrentIndex(newIndex);
-    setFullscreenSrc(subreddit.media[newIndex]);
+    setFullscreenSrc(post.media[newIndex].url);
+    setFullscreenType(post.media[newIndex].type);
+  };
+
+  const formatTime = (created) => {
+    const now = new Date();
+    const postDate = new Date(created * 1000);
+    const diffInMinutes = Math.floor((now - postDate) / (1000 * 60));
+
+    if (diffInMinutes < 60) {
+      return `${diffInMinutes} min ago`;
+    } else if (diffInMinutes < 1440) {
+      return `${Math.floor(diffInMinutes / 60)} hours ago`;
+    } else {
+      return `${Math.floor(diffInMinutes / 1440)} days ago`;
+    }
+  };
+
+  const formatUrl = (url) => {
+    return url.replace(/^https?:\/\//, "").replace(/\/$/, "");
   };
 
   return (
     <div className={styles.card}>
       {isFullscreen && (
         <div className={styles.fullscreen} onClick={closeFullscreen}>
-          <img
-            src={fullscreenSrc}
-            alt="Full screen view"
-            onClick={(e) => e.stopPropagation()}
-          />
+          {fullscreenType === "image" ? (
+            <img
+              src={fullscreenSrc}
+              alt="Full screen view"
+              onClick={(e) => e.stopPropagation()}
+            />
+          ) : (
+            <video
+              src={fullscreenSrc}
+              controls
+              autoPlay
+              onClick={(e) => e.stopPropagation()}
+            />
+          )}
           <button className={styles.closeBtn} onClick={closeFullscreen}>
             ×
           </button>
-          {subreddit.media.length > 1 && (
+          {post.media?.length > 1 && (
             <>
               <button
                 className={`${styles.navArrow} ${styles.leftArrow}`}
@@ -105,38 +114,56 @@ const Post = () => {
 
       <div className={styles.cardHeader}>
         <div className={styles.subredditInfo}>
-          <img src={subreddit.img} className={styles.subredditImg} />
-          <p className={styles.subredditName}>r/EvilCats • {subreddit.time}</p>
+          <img className={styles.subredditImg} src={"/evil-smile.jpg"}/>
+          <p className={styles.subredditName}>
+            r/{post.subreddit} • {formatTime(post.created)}
+          </p>
         </div>
         <div className={styles.score}>
           <FaHeart />
-          <p>{subreddit.score}</p>
+          <p>{post.score}</p>
         </div>
       </div>
+
       <div className={styles.textArea}>
-        <p className={styles.postTitle}>{subreddit.postTitle}</p>
-        {hasText ? <p className={styles.postText}>{subreddit.postText}</p> : ""}
+        <p className={styles.postTitle}>{post.title}</p>
+        {post.text ? <p className={styles.postText}>{post.text}</p> : ""}
       </div>
 
-      {hasLink ? (
+      {post.link ? (
         <div className={styles.linkArea}>
-          <a href={subreddit.link} target="_blank" className={styles.link}>
-            <FaLink /> {subreddit.link}
+          <a
+            href={post.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.link}
+          >
+            <FaLink /> {formatUrl(post.link)}
           </a>
         </div>
       ) : (
         ""
       )}
 
-      {hasMedia ? (
+      {post.media ? (
         <div className={styles.mediaArea}>
-          {subreddit.media.map((src, index) => (
+          {post.media.map((media, index) => (
             <figure key={index}>
-              <img
-                src={src}
-                className={styles.media}
-                onClick={() => openFullscreen(index)}
-              />
+              {media.type === "image" ? (
+                <img
+                  src={media.url}
+                  className={styles.media}
+                  onClick={() => openFullscreen(index)}
+                  alt=""
+                />
+              ) : (
+                <video
+                  src={media.url}
+                  className={styles.media}
+                  onClick={() => openFullscreen(index)}
+                  controls
+                />
+              )}
             </figure>
           ))}
         </div>
