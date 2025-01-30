@@ -1,16 +1,11 @@
-import { FaReddit } from "react-icons/fa";
 import styles from "./Subreddit.module.css";
 
-const subreddit = {
-  name: "r/EvilCats",
-  img: "/evil-smile.jpg",
-}
 
-const Subreddit = () => {
+const Subreddit = ({ subreddit }) => {
   return (
     <div className={styles.subreddit}>
-      <img src={subreddit.img} className={styles.subredditImg} />
-      <p className={styles.subredditName}>{subreddit.name}</p>
+      <img src="/evil-smile.jpg" className={styles.subredditImg} />
+      <p className={styles.subredditName}>r/{subreddit.name}</p>
     </div>
   );
 };

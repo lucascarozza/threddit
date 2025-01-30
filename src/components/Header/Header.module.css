@@ -16,12 +16,20 @@
     cursor: default;
 }
 
-.headerLeft,
+.logoArea,
 .headerRight {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 1rem;
+}
+
+.logoArea {
+    transition: var(--default-transition);
+}
+
+.logoArea:hover {
+    transform: scale(1.03);
 }
 
 .logo {
@@ -31,6 +39,10 @@
 
 .icon {
     font-size: 3rem;
+}
+
+.logoLink {
+    color: black;
 }
 
 .themeIcon {

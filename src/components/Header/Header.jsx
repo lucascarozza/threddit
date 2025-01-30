@@ -8,10 +8,12 @@ const Header = () => {
 
   return (
     <header className={styles.header}>
-      <div className={styles.headerLeft}>
-        <FaRedditAlien className={styles.icon} />
-        <h1 className={styles.logo}>threddit</h1>
-      </div>
+      <a href="/" className={styles.logoLink}>
+        <div className={styles.logoArea}>
+          <FaRedditAlien className={styles.icon} />
+          <h1 className={styles.logo}>threddit</h1>
+        </div>
+      </a>
       <div className={styles.headerRight}>
         <SearchBar />
         {/* {isLight ? <MdLightMode className={styles.themeIcon} /> : <MdDarkMode className={styles.themeIcon} />} */}

@@ -2,6 +2,9 @@ import { useState, useEffect } from "react";
 import styles from "./Post.module.css";
 import { FaHeart } from "react-icons/fa6";
 import { FaLink } from "react-icons/fa";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import rehypeRaw from "rehype-raw";
 
 const Post = ({ post }) => {
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -58,7 +61,7 @@ const Post = ({ post }) => {
     const now = new Date();
     const postDate = new Date(created * 1000);
     const diffInMinutes = Math.floor((now - postDate) / (1000 * 60));
-  
+
     if (diffInMinutes < 60) {
       return `${diffInMinutes} min ago`;
     } else if (diffInMinutes < 1440) {
@@ -78,20 +81,27 @@ const Post = ({ post }) => {
       return years === 1 ? `${years} year ago` : `${years} years ago`;
     }
   };
-  
 
   function formatScore(score) {
     if (score >= 1000000) {
-      return (score / 1000000).toFixed(1) + 'm';
+      return (score / 1000000).toFixed(1) + "m";
     } else if (score >= 1000) {
-      return (score / 1000).toFixed(1) + 'k';
+      return (score / 1000).toFixed(1) + "k";
     } else {
       return score.toString();
     }
-  }  
+  }
 
   const formatUrl = (url) => {
     return url.replace(/^https?:\/\//, "").replace(/\/$/, "");
+  };
+
+  const markdownRenderers = {
+    a: ({ href, children }) => (
+      <a href={href} target="_blank" rel="noopener noreferrer">
+        {children}
+      </a>
+    ),
   };
 
   return (
@@ -136,7 +146,7 @@ const Post = ({ post }) => {
 
       <div className={styles.cardHeader}>
         <div className={styles.subredditInfo}>
-          <img className={styles.subredditImg} src={"/evil-smile.jpg"}/>
+          <img className={styles.subredditImg} src={"/evil-smile.jpg"} />
           <p className={styles.subredditName}>
             r/{post.subreddit} • {formatTime(post.created)}
           </p>
@@ -149,7 +159,18 @@ const Post = ({ post }) => {
 
       <div className={styles.textArea}>
         <p className={styles.postTitle}>{post.title}</p>
-        {post.text ? <p className={styles.postText}>{post.text}</p> : ""}
+        {post.text ? (
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm]}
+            rehypePlugins={[rehypeRaw]}
+            components={markdownRenderers}
+            className={styles.postText}
+          >
+            {post.text}
+          </ReactMarkdown>
+        ) : (
+          ""
+        )}
       </div>
 
       {post.link ? (
