@@ -5,12 +5,28 @@ import { FaLink } from "react-icons/fa";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
+import { fetchSubreddits } from "../../features/subredditsSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const Post = ({ post }) => {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [fullscreenSrc, setFullscreenSrc] = useState("");
   const [fullscreenType, setFullscreenType] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  const dispatch = useDispatch();
+  const subreddits = useSelector((state) => state.subreddits.list);
+
+  useEffect(() => {
+    if (subreddits.length === 0) {
+      dispatch(fetchSubreddits());
+    }
+  }, [dispatch, subreddits.length]);
+
+  const getSubredditIcon = (subredditName) => {
+    const subreddit = subreddits.find((sub) => sub.name === subredditName);
+    return subreddit ? subreddit.icon : "/default_icon_url";
+  };
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -146,7 +162,7 @@ const Post = ({ post }) => {
 
       <div className={styles.cardHeader}>
         <div className={styles.subredditInfo}>
-          <img className={styles.subredditImg} src={"/evil-smile.jpg"} />
+          <img className={styles.subredditImg} src={getSubredditIcon(post.subreddit)} />
           <p className={styles.subredditName}>
             r/{post.subreddit} • {formatTime(post.created)}
           </p>
