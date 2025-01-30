@@ -13,7 +13,10 @@ export const fetchSubreddits = createAsyncThunk(
       id: subreddit.data.id,
       name: subreddit.data.display_name,
       url: subreddit.data.url,
-      icon: subreddit.data.icon_img || he.decode(subreddit.data.community_icon) || "/default_icon.png",
+      icon:
+        subreddit.data.icon_img ||
+        he.decode(subreddit.data.community_icon) ||
+        "/default_icon.png",
     }));
   }
 );
@@ -39,7 +42,7 @@ const subredditsSlice = createSlice({
       .addCase(fetchSubreddits.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
-      })
+      });
   },
 });
 

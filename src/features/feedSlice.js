@@ -86,7 +86,7 @@ const feedSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchFeed.pending, (state) => {
-        state.status = "loading";
+        state.status = "pending";
       })
       .addCase(fetchFeed.fulfilled, (state, action) => {
         state.status = "succeeded";

@@ -21,9 +21,20 @@ const SubredditsList = () => {
     <aside className={styles.subreddits}>
       <h2 className={styles.listTitle}>subreddits</h2>
       <div className={styles.list}>
-        {status === "loading" && <p>Loading...</p>}
-        {status === "failed" && <p>Error: {error}</p>}
-        {status === "succeeded" &&
+        {status === "pending" ? (
+          <div className={styles.status}>
+            <p className={styles.statusText}>
+              Fetching popular subreddits for you... 🚀
+            </p>
+          </div>
+        ) : status === "failed" ? (
+          <div className={styles.status}>
+            <p className={styles.statusText}>
+              Oops! Something went wrong. 😔 Please try again later.
+            </p>
+            <p className={styles.statusError}>Error: {error}</p>
+          </div>
+        ) : (
           list.map((subreddit) => (
             <div
               key={subreddit.id}
@@ -32,7 +43,8 @@ const SubredditsList = () => {
             >
               <Subreddit subreddit={subreddit} />
             </div>
-          ))}
+          ))
+        )}
       </div>
     </aside>
   );
