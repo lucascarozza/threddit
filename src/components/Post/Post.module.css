@@ -87,6 +87,8 @@
   gap: 0.5rem;
   width: 100%;
   padding: 1rem;
+  overflow-y: hidden;
+  overflow-x: auto;
 }
 
 .link {
@@ -100,6 +102,7 @@
   padding: 0.5rem 1rem;
   color: black;
   transition: var(--default-transition);
+  flex-shrink: 0;
 }
 
 .link:hover {

@@ -54,7 +54,7 @@ const extractPostMedia = (post) => {
   if (
     post.url.match(/\.(jpg|jpeg|png|webp|gif)$/i) ||
     post.url.includes("i.redd.it") ||
-    post.url.includes("i.imgur.com")
+    (new URL(post.url).host === "i.imgur.com")
   ) {
     return [{ type: "image", url: post.url }];
   }

@@ -1,7 +1,7 @@
 // Styles imports
 import styles from "./Post.module.css";
 // React imports
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import FullscreenMediaViewer from "../FullscreenMediaViewer/FullscreenMediaViewer";
 // Redux imports
 import { useDispatch, useSelector } from "react-redux";
@@ -10,9 +10,9 @@ import { fetchSubreddits } from "../../features/subredditsSlice";
 // Markdown support imports
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import rehypeRaw from "rehype-raw";
 // Formatters imports
 import { formatTime, formatScore } from "../../utils/formatters";
+import he from "he";
 
 const markdownRenderers = {
   a: ({ href, children }) => (
@@ -87,7 +87,6 @@ const Post = ({ post }) => {
         {post.text && (
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
-            rehypePlugins={[rehypeRaw]}
             components={markdownRenderers}
             className={styles.postText}
           >
