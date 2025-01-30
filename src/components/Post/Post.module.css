@@ -77,60 +77,8 @@
   cursor: pointer;
 }
 
-.fullscreen {
-  display: flex;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.8);
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-  -webkit-backdrop-filter: blur(2px);
-  backdrop-filter: blur(2px);
-}
-
-.fullscreen img,
-.fullscreen video {
-  max-width: 90vw;
-  max-height: 90vh;
-  border-radius: 0.5rem;
-}
-
 .media {
   cursor: pointer;
-}
-
-.closeBtn,
-.navArrow {
-  font-family: var(--font-family);
-  position: absolute;
-  background: transparent;
-  color: white;
-  border: none;
-  font-size: 5rem;
-  cursor: pointer;
-  z-index: 1001;
-}
-
-.closeBtn {
-  top: 1rem;
-  right: 2rem;
-}
-
-.navArrow {
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-.leftArrow {
-  left: 2rem;
-}
-
-.rightArrow {
-  right: 2rem;
 }
 
 .linkArea {

@@ -1,168 +1,77 @@
-import { useState, useEffect } from "react";
+// Styles imports
 import styles from "./Post.module.css";
-import { FaHeart } from "react-icons/fa6";
-import { FaLink } from "react-icons/fa";
+// React imports
+import React, { useState, useEffect } from "react";
+import FullscreenMediaViewer from "../FullscreenMediaViewer/FullscreenMediaViewer";
+// Redux imports
+import { useDispatch, useSelector } from "react-redux";
+import { FaHeart, FaLink } from "react-icons/fa6";
+import { fetchSubreddits } from "../../features/subredditsSlice";
+// Markdown support imports
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
-import { fetchSubreddits } from "../../features/subredditsSlice";
-import { useDispatch, useSelector } from "react-redux";
+// Formatters imports
+import { formatTime, formatScore } from "../../utils/formatters";
+
+const markdownRenderers = {
+  a: ({ href, children }) => (
+    <a href={href} target="_blank" rel="noopener noreferrer">
+      {children}
+    </a>
+  ),
+};
 
 const Post = ({ post }) => {
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [fullscreenSrc, setFullscreenSrc] = useState("");
-  const [fullscreenType, setFullscreenType] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const dispatch = useDispatch();
   const subreddits = useSelector((state) => state.subreddits.list);
 
   useEffect(() => {
-    if (subreddits.length === 0) {
-      dispatch(fetchSubreddits());
-    }
+    if (subreddits.length === 0) dispatch(fetchSubreddits());
   }, [dispatch, subreddits.length]);
 
-  const getSubredditIcon = (subredditName) => {
-    const subreddit = subreddits.find((sub) => sub.name === subredditName);
-    return subreddit ? subreddit.icon : "/default_icon_url";
+  const getSubredditIcon = (name) => {
+    const subreddit = subreddits.find((sub) => sub.name === name);
+    return subreddit?.icon || "/default_icon.png";
   };
-
-  useEffect(() => {
-    const handleKeyDown = (event) => {
-      if (event.key === "Escape") {
-        setIsFullscreen(false);
-      }
-    };
-
-    if (isFullscreen) {
-      document.addEventListener("keydown", handleKeyDown);
-    } else {
-      document.removeEventListener("keydown", handleKeyDown);
-    }
-
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [isFullscreen]);
 
   const openFullscreen = (index) => {
     setCurrentIndex(index);
-    setFullscreenSrc(post.media[index].url);
-    setFullscreenType(post.media[index].type);
     setIsFullscreen(true);
   };
 
-  const closeFullscreen = () => {
-    setIsFullscreen(false);
-  };
+  const closeFullscreen = () => setIsFullscreen(false);
 
-  const nextImage = (event) => {
+  const navigateMedia = (event, direction) => {
     event.stopPropagation();
-    const newIndex = (currentIndex + 1) % post.media.length;
-    setCurrentIndex(newIndex);
-    setFullscreenSrc(post.media[newIndex].url);
-    setFullscreenType(post.media[newIndex].type);
-  };
-
-  const prevImage = (event) => {
-    event.stopPropagation();
-    const newIndex = (currentIndex - 1 + post.media.length) % post.media.length;
-    setCurrentIndex(newIndex);
-    setFullscreenSrc(post.media[newIndex].url);
-    setFullscreenType(post.media[newIndex].type);
-  };
-
-  const formatTime = (created) => {
-    const now = new Date();
-    const postDate = new Date(created * 1000);
-    const diffInMinutes = Math.floor((now - postDate) / (1000 * 60));
-
-    if (diffInMinutes < 60) {
-      return `${diffInMinutes} min ago`;
-    } else if (diffInMinutes < 1440) {
-      const hours = Math.round(diffInMinutes / 60);
-      return hours === 1 ? `${hours} hour ago` : `${hours} hours ago`;
-    } else if (diffInMinutes < 10080) {
-      const days = Math.floor(diffInMinutes / 1440);
-      return days === 1 ? `${days} day ago` : `${days} days ago`;
-    } else if (diffInMinutes < 43200) {
-      const weeks = Math.floor(diffInMinutes / 10080);
-      return weeks === 1 ? `${weeks} week ago` : `${weeks} weeks ago`;
-    } else if (diffInMinutes < 525600) {
-      const months = Math.floor(diffInMinutes / 43200);
-      return months === 1 ? `${months} month ago` : `${months} months ago`;
-    } else {
-      const years = Math.floor(diffInMinutes / 525600);
-      return years === 1 ? `${years} year ago` : `${years} years ago`;
-    }
-  };
-
-  function formatScore(score) {
-    if (score >= 1000000) {
-      return (score / 1000000).toFixed(1) + "m";
-    } else if (score >= 1000) {
-      return (score / 1000).toFixed(1) + "k";
-    } else {
-      return score.toString();
-    }
-  }
-
-  const formatUrl = (url) => {
-    return url.replace(/^https?:\/\//, "").replace(/\/$/, "");
-  };
-
-  const markdownRenderers = {
-    a: ({ href, children }) => (
-      <a href={href} target="_blank" rel="noopener noreferrer">
-        {children}
-      </a>
-    ),
+    setCurrentIndex((prevIndex) => {
+      const newIndex =
+        (prevIndex + direction + post.media.length) % post.media.length;
+      return newIndex;
+    });
   };
 
   return (
     <div className={styles.card}>
       {isFullscreen && (
-        <div className={styles.fullscreen} onClick={closeFullscreen}>
-          {fullscreenType === "image" ? (
-            <img
-              src={fullscreenSrc}
-              alt="Full screen view"
-              onClick={(e) => e.stopPropagation()}
-            />
-          ) : (
-            <video
-              src={fullscreenSrc}
-              controls
-              autoPlay
-              onClick={(e) => e.stopPropagation()}
-            />
-          )}
-          <button className={styles.closeBtn} onClick={closeFullscreen}>
-            ×
-          </button>
-          {post.media?.length > 1 && (
-            <>
-              <button
-                className={`${styles.navArrow} ${styles.leftArrow}`}
-                onClick={prevImage}
-              >
-                ‹
-              </button>
-              <button
-                className={`${styles.navArrow} ${styles.rightArrow}`}
-                onClick={nextImage}
-              >
-                ›
-              </button>
-            </>
-          )}
-        </div>
+        <FullscreenMediaViewer
+          media={post.media}
+          currentIndex={currentIndex}
+          onClose={closeFullscreen}
+          onNavigate={navigateMedia}
+        />
       )}
 
       <div className={styles.cardHeader}>
         <div className={styles.subredditInfo}>
-          <img className={styles.subredditImg} src={getSubredditIcon(post.subreddit)} />
+          <img
+            className={styles.subredditImg}
+            src={getSubredditIcon(post.subreddit)}
+            alt={`${post.subreddit} icon`}
+          />
           <p className={styles.subredditName}>
             r/{post.subreddit} • {formatTime(post.created)}
           </p>
@@ -175,7 +84,7 @@ const Post = ({ post }) => {
 
       <div className={styles.textArea}>
         <p className={styles.postTitle}>{post.title}</p>
-        {post.text ? (
+        {post.text && (
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
             rehypePlugins={[rehypeRaw]}
@@ -184,12 +93,10 @@ const Post = ({ post }) => {
           >
             {post.text}
           </ReactMarkdown>
-        ) : (
-          ""
         )}
       </div>
 
-      {post.link ? (
+      {post.link && (
         <div className={styles.linkArea}>
           <a
             href={post.link}
@@ -197,27 +104,26 @@ const Post = ({ post }) => {
             rel="noopener noreferrer"
             className={styles.link}
           >
-            <FaLink /> {formatUrl(post.link)}
+            <FaLink />{" "}
+            {post.link.replace(/^https?:\/\//, "").replace(/\/$/, "")}
           </a>
         </div>
-      ) : (
-        ""
       )}
 
-      {post.media ? (
+      {post.media && (
         <div className={styles.mediaArea}>
-          {post.media.map((media, index) => (
+          {post.media.map((item, index) => (
             <figure key={index}>
-              {media.type === "image" ? (
+              {item.type === "image" ? (
                 <img
-                  src={media.url}
+                  src={item.url}
                   className={styles.media}
                   onClick={() => openFullscreen(index)}
-                  alt=""
+                  alt={post.media}
                 />
               ) : (
                 <video
-                  src={media.url}
+                  src={item.url}
                   className={styles.media}
                   onClick={() => openFullscreen(index)}
                   controls
@@ -226,8 +132,6 @@ const Post = ({ post }) => {
             </figure>
           ))}
         </div>
-      ) : (
-        ""
       )}
     </div>
   );

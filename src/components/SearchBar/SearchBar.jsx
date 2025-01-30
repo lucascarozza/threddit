@@ -1,8 +1,11 @@
-import { FaSearch } from "react-icons/fa";
+// Styles imports
 import styles from "./SearchBar.module.css";
+import { FaSearch } from "react-icons/fa";
+// React imports
+import { useState } from "react";
+// Redux imports
 import { useDispatch } from "react-redux";
 import { searchPosts } from "../../features/feedSlice";
-import { useState, useEffect } from "react";
 
 const SearchBar = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -10,23 +13,18 @@ const SearchBar = () => {
 
   const handleSearch = () => {
     const sanitizedTerm = searchTerm.replace(/[^\w\s.,-]/gi, "").trim();
-    dispatch(searchPosts(sanitizedTerm));
+    if (sanitizedTerm) {
+      dispatch(searchPosts(sanitizedTerm));
+    }
   };
 
-  useEffect(() => {
-    if (searchTerm) {
-      handleSearch();
-    }
-  }, [searchTerm]);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    handleSearch();
+  };
 
   return (
-    <form
-      className={styles.searchForm}
-      name="Search"
-      onSubmit={(e) => {
-        e.preventDefault();
-      }}
-    >
+    <form className={styles.searchForm} name="Search" onSubmit={handleSubmit}>
       <input
         type="search"
         placeholder="search"
@@ -36,7 +34,7 @@ const SearchBar = () => {
           setSearchTerm(e.target.value);
         }}
       ></input>
-      <button className={styles.searchButton}>
+      <button className={styles.searchButton} title="Search">
         <FaSearch className={styles.searchIcon} />
       </button>
     </form>
