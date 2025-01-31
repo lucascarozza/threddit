@@ -34,7 +34,7 @@ const SearchBar = () => {
           setSearchTerm(e.target.value);
         }}
       ></input>
-      <button className={styles.searchButton} title="Search">
+      <button type="button" className={styles.searchButton} title="Search">
         <FaSearch className={styles.searchIcon} />
       </button>
     </form>

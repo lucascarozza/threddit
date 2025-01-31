@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchSubreddits } from "../../features/subredditsSlice";
 import { setCurrentSubreddit } from "../../features/feedSlice";
-import Subreddit from "../Subreddit/Subreddit";
 
 const SubredditsList = () => {
   const dispatch = useDispatch();
@@ -41,7 +40,10 @@ const SubredditsList = () => {
               onClick={() => handleClick(subreddit.name)}
               className={styles.subredditItem}
             >
-              <Subreddit subreddit={subreddit} />
+              <div className={styles.subreddit}>
+                <img src={subreddit.icon} className={styles.subredditImg} />
+                <p className={styles.subredditName}>r/{subreddit.name}</p>
+              </div>
             </div>
           ))
         )}
